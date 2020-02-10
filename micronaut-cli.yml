@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: fileserver
+---
+testFramework: junit
+sourceLanguage: java
