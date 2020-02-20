@@ -52,10 +52,15 @@ public class FileController {
     }
 
     @Get("/downloadFileByHttpClient")
-    public HttpResponse<?> downloadFileByHttpClient() throws Exception {
+    public SystemFile downloadFileByHttpClient() throws Exception {
+        File temporaryFile = new File(currentFile.getAbsolutePath() + ".anothertmp");
         byte[] data = fileHttpClient.downloadFileBySystemFile().body();
-        logger.info("Letting user download a file via downloadFileByHttpClient with the hash " + getSha2HashFromByteArray(data));
-        return HttpResponse.ok(getSha2HashFromByteArray(data));
+        try (OutputStream outputStream = new FileOutputStream(temporaryFile)) {
+            outputStream.write(data);
+            outputStream.flush();
+            logger.info("Letting user download a file via downloadFileByHttpClient with the byte hash " + getSha2HashFromByteArray(data) + " and file hash: " + getSha2HashFromFile(temporaryFile));
+            return new SystemFile(temporaryFile).attach(currentFileName);
+        }
     }
 
     private String getSha2HashFromFile(File file) throws Exception {
