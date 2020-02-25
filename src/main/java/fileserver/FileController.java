@@ -48,7 +48,7 @@ public class FileController {
     @Get("/downloadFileBySystemFile")
     public SystemFile downloadFileBySystemFile() throws Exception {
         logger.info("Letting user download a file via downloadFileBySystemFile with the hash " + getSha2HashFromFile(currentFile));
-        return new SystemFile(currentFile).attach(currentFileName);
+        return new SystemFile(currentFile, MediaType.APPLICATION_OCTET_STREAM_TYPE).attach(currentFileName);
     }
 
     @Get("/downloadFileByHttpClient")
@@ -59,7 +59,7 @@ public class FileController {
             outputStream.write(data);
             outputStream.flush();
             logger.info("Letting user download a file via downloadFileByHttpClient with the byte hash " + getSha2HashFromByteArray(data) + " and file hash: " + getSha2HashFromFile(temporaryFile));
-            return new SystemFile(temporaryFile).attach(currentFileName);
+            return new SystemFile(temporaryFile, MediaType.APPLICATION_OCTET_STREAM_TYPE).attach(currentFileName);
         }
     }
 
